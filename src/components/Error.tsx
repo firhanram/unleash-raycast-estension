@@ -2,6 +2,7 @@ import { Action, ActionPanel, Detail, openCommandPreferences } from "@raycast/ap
 import { ReactNode } from "react";
 
 export default function Error({ errCode, revalidate }: { errCode: string; revalidate?: () => void }) {
+  console.log(errCode);
   const getError: () => {
     message: string;
     actions: ReactNode;

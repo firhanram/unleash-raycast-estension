@@ -1,4 +1,4 @@
-import { getPreferenceValues, showToast, Toast } from "@raycast/api";
+import { getPreferenceValues } from "@raycast/api";
 import axios, { AxiosError } from "axios";
 import { TError } from "../types";
 
@@ -20,12 +20,6 @@ api.interceptors.response.use(
   (res) => res,
   async (err: AxiosError<TError>) => {
     const errorCode = String(err.response?.status);
-
-    await showToast({
-      title: "Error",
-      message: "An error occurred",
-      style: Toast.Style.Failure,
-    });
 
     return Promise.reject(new Error(errorCode));
   },
