@@ -33,7 +33,7 @@ export default function Features({ projectId }: { projectId: string }) {
                   const title = `${env.enabled ? "Enabled" : "Disabled"} in ${parseEnvironment(env.type)}`;
                   const icon = env.enabled ? Icon.CheckCircle : Icon.XMarkCircle;
 
-                  return <Action title={title} icon={icon} />;
+                  return <Action title={title} icon={icon} key={env.type} />;
                 })}
               </ActionPanel>
             }
