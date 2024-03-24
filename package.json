@@ -18,6 +18,23 @@
       "mode": "view"
     }
   ],
+  "preferences": [
+    {
+      "name": "api",
+      "title": "API",
+      "description": "Unleash API URL",
+      "type": "textfield",
+      "required": true,
+      "placeholder": "https://<your-unleash-url>/api"
+    },
+    {
+      "name": "token",
+      "title": "Personal Access Token",
+      "description": "Unleash Personal Access Token",
+      "type": "password",
+      "required": true
+    }
+  ],
   "dependencies": {
     "@raycast/api": "^1.69.0"
   },
