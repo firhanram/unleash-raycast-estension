@@ -1,5 +1,6 @@
-import { getPreferenceValues, openCommandPreferences, showToast, Toast } from "@raycast/api";
+import { getPreferenceValues, showToast, Toast } from "@raycast/api";
 import axios, { AxiosError } from "axios";
+import { TError } from "../types";
 
 const preferences = getPreferenceValues<Preferences>();
 
@@ -17,15 +18,16 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (res) => res,
-  async (err: AxiosError) => {
-    if (err.status === 401) {
-      await showToast({
-        title: "Unauthorized",
-        message: "Token is invalid or expired",
-        style: Toast.Style.Failure,
-      });
-      await openCommandPreferences();
-    }
+  async (err: AxiosError<TError>) => {
+    const errorCode = String(err.response?.status);
+
+    await showToast({
+      title: "Error",
+      message: "An error occurred",
+      style: Toast.Style.Failure,
+    });
+
+    return Promise.reject(new Error(errorCode));
   },
 );
 

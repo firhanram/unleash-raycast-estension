@@ -19,3 +19,13 @@ export type GetAllProjectsResponse = {
   version: string;
   projects: TProject[];
 };
+
+export type TError = {
+  id: string;
+  name: string;
+  message: string;
+  details: {
+    message: string;
+    description: string;
+  }[];
+};
