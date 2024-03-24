@@ -12,10 +12,11 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "index",
-      "title": "Show List",
-      "description": "Template for showing a static list",
-      "mode": "view"
+      "name": "projects",
+      "title": "Projects",
+      "description": "List all projects",
+      "mode": "view",
+      "subtitle": "Unleash"
     }
   ],
   "preferences": [
