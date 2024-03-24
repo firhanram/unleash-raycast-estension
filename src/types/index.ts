@@ -15,10 +15,13 @@ export type TProject = {
   avgTimeToProduction: number;
 };
 
-export type GetAllProjectsResponse = {
+export type Response = {
   version: string;
-  projects: TProject[];
 };
+
+export type GetAllProjectsResponse = {
+  projects: TProject[];
+} & Response;
 
 export type TError = {
   id: string;
@@ -29,3 +32,30 @@ export type TError = {
     description: string;
   }[];
 };
+
+export type TEnvironment = "development" | "production";
+
+export type TEnvironmentObj = {
+  name: string;
+  featureName: string;
+  environment: TEnvironment;
+  type: TEnvironment;
+  enabled: boolean;
+  sortOrder: number;
+  variantCount: number;
+};
+
+export type TFeature = {
+  name: string;
+  type: string;
+  description: string | null;
+  impressionData: boolean;
+  stale: boolean;
+  createdAt: string | null;
+  lastSeenAt: string | null;
+  environments: TEnvironmentObj[];
+};
+
+export type GetAllFeaturesResponse = {
+  features: TFeature[];
+} & Response;
