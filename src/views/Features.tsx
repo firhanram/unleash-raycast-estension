@@ -2,7 +2,7 @@ import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast 
 import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
 import { parseEnvironment } from "../helpers";
 import { TFeatureToggleParams } from "../types";
-import { enableFeature } from "../api";
+import { disableFeature, enableFeature } from "../api";
 
 export default function Features({ projectId }: { projectId: string }) {
   const { isLoading, data, revalidate } = useGetAllFeatures(projectId);
@@ -23,6 +23,25 @@ export default function Features({ projectId }: { projectId: string }) {
     } catch (err) {
       toast.style = Toast.Style.Failure;
       toast.title = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+    }
+  };
+
+  const handleDisableFeature = async (params: TFeatureToggleParams) => {
+    const toast = await showToast({
+      style: Toast.Style.Animated,
+      title: `Toggling feature ${params.featureName}...`,
+    });
+
+    try {
+      await disableFeature(params);
+      await revalidate();
+
+      toast.style = Toast.Style.Success;
+      toast.title = "Feature Disabled";
+      toast.message = `Disabled ${params.featureName} in ${parseEnvironment(params.environment)}`;
+    } catch (err) {
+      toast.style = Toast.Style.Failure;
+      toast.title = `Failed to disable ${params.featureName} in ${parseEnvironment(params.environment)}`;
     }
   };
 
@@ -56,6 +75,11 @@ export default function Features({ projectId }: { projectId: string }) {
 
                   const handleToggle = () => {
                     if (env.enabled) {
+                      handleDisableFeature({
+                        environment: env.type,
+                        featureName: feature.name,
+                        projectId,
+                      });
                       return;
                     }
 

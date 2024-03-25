@@ -20,3 +20,11 @@ export const enableFeature = async (params: TFeatureToggleParams) => {
 
   return res.data;
 };
+
+export const disableFeature = async (params: TFeatureToggleParams) => {
+  const res = await api.post(
+    `/admin/projects/${params.projectId}/features/${params.featureName}/environments/${params.environment}/off`,
+  );
+
+  return res.data;
+};
