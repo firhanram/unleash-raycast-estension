@@ -109,6 +109,7 @@ export default function Features() {
                   icon={Icon.PlusCircle}
                   onAction={() => push(<CreateFeature revalidate={revalidate} />)}
                 />
+                <Action.CopyToClipboard title="Copy Feature Name" content={feature.name} />
                 <ActionPanel.Submenu title="Toggle" icon={Icon.Eye}>
                   {feature.environments.map((env) => {
                     const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;
