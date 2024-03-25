@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Icon, List, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Grid, Icon, useNavigation } from "@raycast/api";
 import { useGetAllProjects } from "./hooks/useGetAllProjects";
 import Error from "./components/Error";
 import Features from "./views/Features";
@@ -19,13 +19,16 @@ export default function Projects() {
   }
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder="Search Projects...">
+    <Grid isLoading={isLoading} searchBarPlaceholder="Search Projects..." inset={Grid.Inset.Small}>
       {data?.map((project) => (
-        <List.Item
+        <Grid.Item
           title={project.name}
+          content={{
+            source: Icon.Layers,
+          }}
           key={project.name}
-          icon={Icon.Layers}
-          subtitle={`#${project.id}`}
+          // icon={Icon.Layers}
+          subtitle={`${project.featureCount} Toggles`}
           actions={
             <ActionPanel>
               <Action
@@ -37,17 +40,11 @@ export default function Projects() {
               />
             </ActionPanel>
           }
-          accessories={[
-            {
-              tag: `${project.featureCount} Toggles`,
-              tooltip: "Total number of toggles in this project",
-            },
-            {
-              icon: Icon.ChevronRight,
-            },
-          ]}
+          accessory={{
+            icon: Icon.Layers,
+          }}
         />
       ))}
-    </List>
+    </Grid>
   );
 }
