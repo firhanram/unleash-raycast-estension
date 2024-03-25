@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "unleash-toggle",
+  "name": "unleash-feature-flag",
   "title": "Unleash Feature Flag",
   "description": "Toggle the feature with Unleash",
   "icon": "icon.png",
