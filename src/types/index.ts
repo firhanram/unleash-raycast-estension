@@ -82,3 +82,11 @@ export type TValidateFeatureNameReq = {
   name: string;
   projectId?: string | null;
 };
+
+export type TCreateFeatureReq = {
+  projectId: string;
+  type: string;
+  description?: string;
+  impressionData: boolean;
+  name: string;
+};

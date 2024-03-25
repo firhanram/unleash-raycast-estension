@@ -1,8 +1,10 @@
-import { Action, ActionPanel, Form, Icon, Toast, showToast } from "@raycast/api";
-import { TError, TFeature } from "../types";
+import { Action, ActionPanel, Form, Icon, Toast, showToast, useNavigation } from "@raycast/api";
+import { TCreateFeatureReq, TError, TFeature } from "../types";
 import { useState } from "react";
 import { useGetAllFeatureTypes } from "../hooks/useGetAllFeatureTypes";
-import { validateFeatureName } from "../api";
+import { createFeature, validateFeatureName } from "../api";
+import { useCachedState } from "@raycast/utils";
+import { generateErrorMessage } from "../helpers";
 
 type FormValues = {
   name: string;
@@ -18,6 +20,10 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
 
   const { data: featureTypes, isLoading: isLoadingFeatureType } = useGetAllFeatureTypes();
 
+  const [projectId] = useCachedState("project-id", "");
+
+  const { pop } = useNavigation();
+
   const handleValidateFeatureName = async (toast: Toast, name: string) => {
     try {
       await validateFeatureName({
@@ -27,7 +33,8 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
       return true;
     } catch (err) {
       const errResponse = err as TError;
-      const errMessage = errResponse.details[0].message ?? "Invalid feature name";
+      const errCode = errResponse.code;
+      const errMessage = `${errResponse.details[0].message} ${errCode}` ?? "Invalid feature name";
 
       toast.style = Toast.Style.Failure;
       toast.title = "Failed";
@@ -47,13 +54,33 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
       const isValid = await handleValidateFeatureName(toast, values.name);
 
       if (isValid) {
-        console.log("Feature created", values);
+        const body: TCreateFeatureReq = {
+          name: values.name,
+          type: values.type,
+          impressionData: values.impressionData,
+          projectId,
+        };
+
+        if (values.description) {
+          body.description = values.description;
+        }
+
+        await createFeature(body);
+
         await revalidate();
+
+        toast.style = Toast.Style.Success;
+        toast.title = "Feature Created";
+
+        pop();
       }
     } catch (err) {
+      const errResponse = err as TError;
+      const errMessage = generateErrorMessage(errResponse.code);
+
       toast.style = Toast.Style.Failure;
       toast.title = "Failed";
-      toast.message = "An error occurred while creating the feature";
+      toast.message = errMessage;
     }
   };
 

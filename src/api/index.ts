@@ -3,6 +3,7 @@ import {
   GetAllFeatureTypesResponse,
   GetAllFeaturesResponse,
   GetAllProjectsResponse,
+  TCreateFeatureReq,
   TFeatureToggleParams,
   TValidateFeatureNameReq,
 } from "../types";
@@ -43,6 +44,12 @@ export const getAllFeatureTypes = async () => {
 
 export const validateFeatureName = async (body: TValidateFeatureNameReq) => {
   const res = await api.post("/admin/features/validate", body);
+
+  return res.data;
+};
+
+export const createFeature = async (req: TCreateFeatureReq) => {
+  const res = await api.post(`/admin/projects/${req.projectId}/features`, req);
 
   return res.data;
 };
