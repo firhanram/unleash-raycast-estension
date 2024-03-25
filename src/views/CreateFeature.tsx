@@ -1,6 +1,7 @@
 import { Action, ActionPanel, Form } from "@raycast/api";
+import { TFeature } from "../types";
 
-export default function CreateFeature({ revalidate }: { revalidate: () => void }) {
+export default function CreateFeature({ revalidate }: { revalidate: () => Promise<TFeature[]> }) {
   return (
     <Form
       actions={
