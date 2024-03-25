@@ -59,3 +59,9 @@ export type TFeature = {
 export type GetAllFeaturesResponse = {
   features: TFeature[];
 } & Response;
+
+export type TFeatureToggleParams = {
+  environment: TEnvironment;
+  featureName: string;
+  projectId: string;
+};

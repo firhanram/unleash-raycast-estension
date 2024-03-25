@@ -1,9 +1,30 @@
-import { Action, ActionPanel, Icon, List, getPreferenceValues } from "@raycast/api";
+import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast } from "@raycast/api";
 import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
 import { parseEnvironment } from "../helpers";
+import { TFeatureToggleParams } from "../types";
+import { enableFeature } from "../api";
 
 export default function Features({ projectId }: { projectId: string }) {
-  const { isLoading, data } = useGetAllFeatures(projectId);
+  const { isLoading, data, revalidate } = useGetAllFeatures(projectId);
+
+  const handleEnableFeature = async (params: TFeatureToggleParams) => {
+    const toast = await showToast({
+      style: Toast.Style.Animated,
+      title: `Toggling feature ${params.featureName}...`,
+    });
+
+    try {
+      await enableFeature(params);
+      await revalidate();
+
+      toast.style = Toast.Style.Success;
+      toast.title = "Feature Enabled";
+      toast.message = `Enabled ${params.featureName} in ${parseEnvironment(params.environment)}`;
+    } catch (err) {
+      toast.style = Toast.Style.Failure;
+      toast.title = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+    }
+  };
 
   return (
     <List isLoading={isLoading} searchBarPlaceholder="Search Features...">
@@ -30,10 +51,22 @@ export default function Features({ projectId }: { projectId: string }) {
               <ActionPanel title="Toggle">
                 <Action.OpenInBrowser title="Go to Dashboard" url={detailUrl} />
                 {feature.environments.map((env) => {
-                  const title = `${env.enabled ? "Enabled" : "Disabled"} in ${parseEnvironment(env.type)}`;
-                  const icon = env.enabled ? Icon.CheckCircle : Icon.XMarkCircle;
+                  const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;
+                  const icon = env.enabled ? Icon.XMarkCircle : Icon.CheckCircle;
 
-                  return <Action title={title} icon={icon} key={env.type} />;
+                  const handleToggle = () => {
+                    if (env.enabled) {
+                      return;
+                    }
+
+                    handleEnableFeature({
+                      environment: env.type,
+                      featureName: feature.name,
+                      projectId,
+                    });
+                  };
+
+                  return <Action title={title} icon={icon} key={env.type} onAction={() => handleToggle()} />;
                 })}
               </ActionPanel>
             }

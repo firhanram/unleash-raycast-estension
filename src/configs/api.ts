@@ -21,6 +21,8 @@ api.interceptors.response.use(
   async (err: AxiosError<TError>) => {
     const errorCode = String(err.response?.status);
 
+    console.error(errorCode);
+
     return Promise.reject(new Error(errorCode));
   },
 );
