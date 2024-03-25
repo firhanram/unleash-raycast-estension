@@ -33,7 +33,7 @@ export type TError = {
   }[];
 };
 
-export type TEnvironment = "development" | "production";
+export type TEnvironment = "development" | "production" | "test" | "preproduction";
 
 export type TEnvironmentObj = {
   name: string;

@@ -6,6 +6,10 @@ export const parseEnvironment = (env: TEnvironment) => {
       return "Dev";
     case "production":
       return "Prod";
+    case "test":
+      return "Test";
+    case "preproduction":
+      return "Preprod";
     default:
       return "Unknown";
   }
