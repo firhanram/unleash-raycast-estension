@@ -129,8 +129,9 @@ export default function Features() {
               ...environments,
               feature.createdAt
                 ? {
-                    tag: timeFromNow,
+                    text: timeFromNow,
                     tooltip: createdAt,
+                    icon: Icon.Clock,
                   }
                 : {},
             ]}
@@ -142,24 +143,7 @@ export default function Features() {
                   icon={Icon.PlusCircle}
                   onAction={() => push(<CreateFeature revalidate={revalidate} />)}
                 />
-                <Action.CopyToClipboard title="Copy Feature Name" content={feature.name} />
-                <Action
-                  title="Archive Feature"
-                  icon={Icon.Folder}
-                  onAction={async () => {
-                    await confirmAlert({
-                      title: "Are you sure you want to archive this feature toggle?",
-                      primaryAction: {
-                        title: "Archive togggle",
-                        onAction: () => handleArchiveFeature(feature.name),
-                      },
-                      dismissAction: {
-                        title: "Cancel",
-                      },
-                    });
-                  }}
-                />
-                <ActionPanel.Submenu title="Toggle" icon={Icon.Eye}>
+                <ActionPanel.Submenu title="Toggle Feature" icon={Icon.Eye}>
                   {feature.environments.map((env) => {
                     const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;
                     const icon = env.enabled ? Icon.XMarkCircle : Icon.CheckCircle;
@@ -184,6 +168,24 @@ export default function Features() {
                     return <Action title={title} icon={icon} key={env.type} onAction={() => handleToggle()} />;
                   })}
                 </ActionPanel.Submenu>
+                <Action.CopyToClipboard title="Copy Feature Name" content={feature.name} />
+
+                <Action
+                  title="Archive Feature"
+                  icon={Icon.Bookmark}
+                  onAction={async () => {
+                    await confirmAlert({
+                      title: "Are you sure you want to archive this feature toggle?",
+                      primaryAction: {
+                        title: "Archive togggle",
+                        onAction: () => handleArchiveFeature(feature.name),
+                      },
+                      dismissAction: {
+                        title: "Cancel",
+                      },
+                    });
+                  }}
+                />
               </ActionPanel>
             }
           />
