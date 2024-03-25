@@ -1,9 +1,9 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "unleash-toggle",
-  "title": "Unleash Toggle",
+  "title": "Unleash Feature Flag",
   "description": "Toggle the feature with Unleash",
-  "icon": "command-icon.png",
+  "icon": "icon.png",
   "author": "firhan_ramadhan",
   "categories": [
     "Developer Tools",
