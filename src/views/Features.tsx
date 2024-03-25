@@ -82,36 +82,38 @@ export default function Features() {
             icon={Icon.Flag}
             accessories={[...environments]}
             actions={
-              <ActionPanel title="Toggle">
+              <ActionPanel title="Feature">
                 <Action.OpenInBrowser title="Go to Dashboard" url={detailUrl} />
-                {feature.environments.map((env) => {
-                  const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;
-                  const icon = env.enabled ? Icon.XMarkCircle : Icon.CheckCircle;
+                <Action
+                  title="Create New Feature"
+                  icon={Icon.PlusCircle}
+                  onAction={() => push(<CreateFeature revalidate={revalidate} />)}
+                />
+                <ActionPanel.Section title="Toggle">
+                  {feature.environments.map((env) => {
+                    const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;
+                    const icon = env.enabled ? Icon.XMarkCircle : Icon.CheckCircle;
 
-                  const handleToggle = () => {
-                    if (env.enabled) {
-                      handleDisableFeature({
+                    const handleToggle = () => {
+                      if (env.enabled) {
+                        handleDisableFeature({
+                          environment: env.type,
+                          featureName: feature.name,
+                          projectId,
+                        });
+                        return;
+                      }
+
+                      handleEnableFeature({
                         environment: env.type,
                         featureName: feature.name,
                         projectId,
                       });
-                      return;
-                    }
+                    };
 
-                    handleEnableFeature({
-                      environment: env.type,
-                      featureName: feature.name,
-                      projectId,
-                    });
-                  };
-
-                  return <Action title={title} icon={icon} key={env.type} onAction={() => handleToggle()} />;
-                })}
-                <Action
-                  title="Create New Feature Toggle"
-                  icon={Icon.PlusCircle}
-                  onAction={() => push(<CreateFeature revalidate={revalidate} />)}
-                />
+                    return <Action title={title} icon={icon} key={env.type} onAction={() => handleToggle()} />;
+                  })}
+                </ActionPanel.Section>
               </ActionPanel>
             }
           />
