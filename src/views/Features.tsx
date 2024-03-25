@@ -5,6 +5,7 @@ import { TError, TFeatureToggleParams } from "../types";
 import { disableFeature, enableFeature } from "../api";
 import { useCachedState } from "@raycast/utils";
 import CreateFeature from "./CreateFeature";
+import dayjs from "dayjs";
 
 export default function Features() {
   const [projectId] = useCachedState("project-id", "");
@@ -75,12 +76,22 @@ export default function Features() {
         const url = new URL(getPreferenceValues<Preferences>().api);
         const detailUrl = `${url.origin}/projects/${projectId}/features/${feature.name}`;
 
+        const createdAt = dayjs(feature.createdAt).format("MMM DD, YYYY").toString();
+
         return (
           <List.Item
             key={feature.name}
             title={feature.name}
             icon={Icon.Flag}
-            accessories={[...environments]}
+            subtitle={`#${feature.type}`}
+            accessories={[
+              ...environments,
+              feature.createdAt
+                ? {
+                    tag: createdAt,
+                  }
+                : {},
+            ]}
             actions={
               <ActionPanel title="Feature">
                 <Action.OpenInBrowser title="Go to Dashboard" url={detailUrl} />
