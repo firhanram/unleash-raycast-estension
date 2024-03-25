@@ -14,7 +14,7 @@
     {
       "name": "projects",
       "title": "Projects",
-      "description": "List all projects",
+      "description": "List all projects in Unleash",
       "mode": "view",
       "subtitle": "Unleash"
     }
