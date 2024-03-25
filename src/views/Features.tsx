@@ -1,8 +1,18 @@
-import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast, useNavigation } from "@raycast/api";
+import {
+  Action,
+  ActionPanel,
+  Icon,
+  List,
+  Toast,
+  confirmAlert,
+  getPreferenceValues,
+  showToast,
+  useNavigation,
+} from "@raycast/api";
 import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
 import { generateErrorMessage, parseEnvironment } from "../helpers";
 import { TError, TFeatureToggleParams } from "../types";
-import { disableFeature, enableFeature } from "../api";
+import { archiveFeature, disableFeature, enableFeature } from "../api";
 import { useCachedState } from "@raycast/utils";
 import CreateFeature from "./CreateFeature";
 import dayjs from "../utils/dayjs";
@@ -38,9 +48,8 @@ export default function Features() {
 
       const errResponse = err as TError;
 
-      toast.title = generateErrorMessage(errResponse.code);
-
-      toast.message = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+      toast.title = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+      toast.message = generateErrorMessage(errResponse.code);
     }
   };
 
@@ -62,9 +71,33 @@ export default function Features() {
 
       const errResponse = err as TError;
 
-      toast.title = generateErrorMessage(errResponse.code);
-
       toast.title = `Failed to disable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+      toast.message = generateErrorMessage(errResponse.code);
+    }
+  };
+
+  const handleArchiveFeature = async (name: string) => {
+    const toast = await showToast({
+      style: Toast.Style.Animated,
+      title: `Archiving...`,
+    });
+    try {
+      await archiveFeature({
+        featureName: name,
+        projectId,
+      });
+
+      await revalidate();
+
+      toast.style = Toast.Style.Success;
+      toast.title = "Feature Archived";
+    } catch (err) {
+      toast.style = Toast.Style.Failure;
+
+      const errResponse = err as TError;
+
+      toast.title = "Failed";
+      toast.message = generateErrorMessage(errResponse.code);
     }
   };
 
@@ -110,6 +143,22 @@ export default function Features() {
                   onAction={() => push(<CreateFeature revalidate={revalidate} />)}
                 />
                 <Action.CopyToClipboard title="Copy Feature Name" content={feature.name} />
+                <Action
+                  title="Archive Feature"
+                  icon={Icon.Folder}
+                  onAction={async () => {
+                    await confirmAlert({
+                      title: "Are you sure you want to archive this feature toggle?",
+                      primaryAction: {
+                        title: "Archive togggle",
+                        onAction: () => handleArchiveFeature(feature.name),
+                      },
+                      dismissAction: {
+                        title: "Cancel",
+                      },
+                    });
+                  }}
+                />
                 <ActionPanel.Submenu title="Toggle" icon={Icon.Eye}>
                   {feature.environments.map((env) => {
                     const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;

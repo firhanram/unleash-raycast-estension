@@ -90,3 +90,8 @@ export type TCreateFeatureReq = {
   impressionData: boolean;
   name: string;
 };
+
+export type TArchiveFeatureReq = {
+  featureName: string;
+  projectId: string;
+};

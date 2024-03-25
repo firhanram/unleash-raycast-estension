@@ -3,6 +3,7 @@ import {
   GetAllFeatureTypesResponse,
   GetAllFeaturesResponse,
   GetAllProjectsResponse,
+  TArchiveFeatureReq,
   TCreateFeatureReq,
   TFeatureToggleParams,
   TValidateFeatureNameReq,
@@ -50,6 +51,12 @@ export const validateFeatureName = async (body: TValidateFeatureNameReq) => {
 
 export const createFeature = async (req: TCreateFeatureReq) => {
   const res = await api.post(`/admin/projects/${req.projectId}/features`, req);
+
+  return res.data;
+};
+
+export const archiveFeature = async (req: TArchiveFeatureReq) => {
+  const res = await api.delete(`/admin/projects/${req.projectId}/features/${req.featureName}`);
 
   return res.data;
 };
