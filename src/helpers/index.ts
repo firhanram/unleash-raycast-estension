@@ -14,3 +14,16 @@ export const parseEnvironment = (env: TEnvironment) => {
       return "Unknown";
   }
 };
+
+export const generateErrorMessage = (errCode: string) => {
+  switch (errCode) {
+    case "401":
+      return "Unauthorized. Please update your token or API in the preferences";
+    case "403":
+      return "Forbidden. You don't have permission to access this resource";
+    case "404":
+      return "Resource not found";
+    default:
+      return "An error occurred";
+  }
+};

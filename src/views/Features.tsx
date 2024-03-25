@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast } from "@raycast/api";
 import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
-import { parseEnvironment } from "../helpers";
+import { generateErrorMessage, parseEnvironment } from "../helpers";
 import { TFeatureToggleParams } from "../types";
 import { disableFeature, enableFeature } from "../api";
 
@@ -22,7 +22,12 @@ export default function Features({ projectId }: { projectId: string }) {
       toast.message = `Enabled ${params.featureName} in ${parseEnvironment(params.environment)}`;
     } catch (err) {
       toast.style = Toast.Style.Failure;
-      toast.title = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+
+      if (err instanceof Error) {
+        toast.title = generateErrorMessage(err.message);
+      }
+
+      toast.message = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
     }
   };
 
@@ -41,6 +46,11 @@ export default function Features({ projectId }: { projectId: string }) {
       toast.message = `Disabled ${params.featureName} in ${parseEnvironment(params.environment)}`;
     } catch (err) {
       toast.style = Toast.Style.Failure;
+
+      if (err instanceof Error) {
+        toast.title = generateErrorMessage(err.message);
+      }
+
       toast.title = `Failed to disable ${params.featureName} in ${parseEnvironment(params.environment)}`;
     }
   };

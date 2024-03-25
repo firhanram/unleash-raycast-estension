@@ -1,37 +1,25 @@
 import { Action, ActionPanel, Detail, openCommandPreferences } from "@raycast/api";
-import { ReactNode } from "react";
+import { generateErrorMessage } from "../helpers";
 
 export default function Error({ errCode, revalidate }: { errCode: string; revalidate?: () => void }) {
-  const getError: () => {
-    message: string;
-    actions: ReactNode;
-  } = () => {
+  const actions = (() => {
     switch (errCode) {
       case "401":
-        return {
-          message: "Unauthorized. Please update your token or API in the preferences",
-          actions: (
-            <ActionPanel>
-              <Action title="Open Extension Preferences" onAction={openCommandPreferences} />
-            </ActionPanel>
-          ),
-        };
+        return (
+          <ActionPanel>
+            <Action title="Open Extension Preferences" onAction={openCommandPreferences} />
+          </ActionPanel>
+        );
       case "403":
-        return {
-          message: "Forbidden. You don't have permission to access this resource",
-          actions: null,
-        };
+        return null;
       default:
-        return {
-          message: "Failed to fetch data",
-          actions: (
-            <ActionPanel>
-              <Action title="Reload" onAction={() => revalidate?.()} />
-            </ActionPanel>
-          ),
-        };
+        return (
+          <ActionPanel>
+            <Action title="Reload" onAction={() => revalidate?.()} />
+          </ActionPanel>
+        );
     }
-  };
+  })();
 
-  return <Detail markdown={`### ${getError().message}`} actions={getError().actions} />;
+  return <Detail markdown={`### ${generateErrorMessage(errCode)}`} actions={actions} />;
 }
