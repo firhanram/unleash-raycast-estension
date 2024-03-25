@@ -1,13 +1,16 @@
-import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast } from "@raycast/api";
+import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast, useNavigation } from "@raycast/api";
 import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
 import { generateErrorMessage, parseEnvironment } from "../helpers";
 import { TFeatureToggleParams } from "../types";
 import { disableFeature, enableFeature } from "../api";
 import { useCachedState } from "@raycast/utils";
+import CreateFeature from "./CreateFeature";
 
 export default function Features() {
   const [projectId] = useCachedState("project-id", "");
   const { isLoading, data, revalidate } = useGetAllFeatures(projectId);
+
+  const { push } = useNavigation();
 
   const handleEnableFeature = async (params: TFeatureToggleParams) => {
     const toast = await showToast({
@@ -58,7 +61,7 @@ export default function Features() {
   };
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder="Search Features...">
+    <List isLoading={isLoading} searchBarPlaceholder="Search Features..." navigationTitle="Features">
       {data?.map((feature) => {
         const environments: List.Item.Props["accessories"] = feature.environments.map((env) => {
           return {
@@ -104,6 +107,11 @@ export default function Features() {
 
                   return <Action title={title} icon={icon} key={env.type} onAction={() => handleToggle()} />;
                 })}
+                <Action
+                  title="Create New Feature Toggle"
+                  icon={Icon.PlusCircle}
+                  onAction={() => push(<CreateFeature revalidate={revalidate} />)}
+                />
               </ActionPanel>
             }
           />
