@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Icon, List, Toast, getPreferenceValues, showToast, useNavigation } from "@raycast/api";
 import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
 import { generateErrorMessage, parseEnvironment } from "../helpers";
-import { TFeatureToggleParams } from "../types";
+import { TError, TFeatureToggleParams } from "../types";
 import { disableFeature, enableFeature } from "../api";
 import { useCachedState } from "@raycast/utils";
 import CreateFeature from "./CreateFeature";
@@ -28,9 +28,9 @@ export default function Features() {
     } catch (err) {
       toast.style = Toast.Style.Failure;
 
-      if (err instanceof Error) {
-        toast.title = generateErrorMessage(err.message);
-      }
+      const errResponse = err as TError;
+
+      toast.title = generateErrorMessage(errResponse.code);
 
       toast.message = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
     }
@@ -52,9 +52,9 @@ export default function Features() {
     } catch (err) {
       toast.style = Toast.Style.Failure;
 
-      if (err instanceof Error) {
-        toast.title = generateErrorMessage(err.message);
-      }
+      const errResponse = err as TError;
+
+      toast.title = generateErrorMessage(errResponse.code);
 
       toast.title = `Failed to disable ${params.featureName} in ${parseEnvironment(params.environment)}`;
     }
