@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "unleash-feature-flag",
-  "title": "Unleash Feature Flag",
-  "description": "Toggle the feature with Unleash",
+  "name": "unleash-feature-toggle",
+  "title": "Unleash Feature Toggle",
+  "description": "List all projects and feature toggles from Unleash",
   "icon": "icon.png",
   "author": "firhan_ramadhan",
   "categories": [
@@ -26,7 +26,7 @@
       "description": "Unleash API URL",
       "type": "textfield",
       "required": true,
-      "placeholder": "https://<your-unleash-url>/api"
+      "placeholder": "https://<your-unleash-instance>/api"
     },
     {
       "name": "token",
