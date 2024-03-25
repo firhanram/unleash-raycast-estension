@@ -5,7 +5,7 @@ import { TError, TFeatureToggleParams } from "../types";
 import { disableFeature, enableFeature } from "../api";
 import { useCachedState } from "@raycast/utils";
 import CreateFeature from "./CreateFeature";
-import dayjs from "dayjs";
+import dayjs from "../utils/dayjs";
 
 export default function Features() {
   const [projectId] = useCachedState("project-id", "");
@@ -76,7 +76,8 @@ export default function Features() {
         const url = new URL(getPreferenceValues<Preferences>().api);
         const detailUrl = `${url.origin}/projects/${projectId}/features/${feature.name}`;
 
-        const createdAt = dayjs(feature.createdAt).format("MMM DD, YYYY").toString();
+        const createdAt = dayjs(feature.createdAt).format("DD MMM YYYY HH:mm").toString();
+        const timeFromNow = dayjs(feature.createdAt).fromNow();
 
         return (
           <List.Item
@@ -88,7 +89,8 @@ export default function Features() {
               ...environments,
               feature.createdAt
                 ? {
-                    tag: createdAt,
+                    tag: timeFromNow,
+                    tooltip: createdAt,
                   }
                 : {},
             ]}
