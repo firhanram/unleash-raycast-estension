@@ -1,5 +1,10 @@
 import api from "../configs/api";
-import { GetAllFeaturesResponse, GetAllProjectsResponse, TFeatureToggleParams } from "../types";
+import {
+  GetAllFeatureTypesResponse,
+  GetAllFeaturesResponse,
+  GetAllProjectsResponse,
+  TFeatureToggleParams,
+} from "../types";
 
 export const getAllProjects = async () => {
   const res = await api.get<GetAllProjectsResponse>("/admin/projects");
@@ -25,6 +30,12 @@ export const disableFeature = async (params: TFeatureToggleParams) => {
   const res = await api.post(
     `/admin/projects/${params.projectId}/features/${params.featureName}/environments/${params.environment}/off`,
   );
+
+  return res.data;
+};
+
+export const getAllFeatureTypes = async () => {
+  const res = await api.get<GetAllFeatureTypesResponse>("/admin/feature-types");
 
   return res.data;
 };

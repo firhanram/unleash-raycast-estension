@@ -65,3 +65,14 @@ export type TFeatureToggleParams = {
   featureName: string;
   projectId: string;
 };
+
+export type TFeatureTypeObj = {
+  id: string;
+  name: string;
+  description: string;
+  lifetimeDays: number | null;
+};
+
+export type GetAllFeatureTypesResponse = {
+  types: TFeatureTypeObj[];
+} & Response;

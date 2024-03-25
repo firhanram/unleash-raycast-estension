@@ -1,10 +1,14 @@
 import { Action, ActionPanel, Form } from "@raycast/api";
 import { TFeature } from "../types";
 import { useState } from "react";
+import { useGetAllFeatureTypes } from "../hooks/useGetAllFeatureTypes";
 
 export default function CreateFeature({ revalidate }: { revalidate: () => Promise<TFeature[]> }) {
   const [featureName, setFeatureName] = useState("");
   const [featureNameError, setFeatureNameError] = useState("");
+  const [selectedFeatureType, setSelectedFeatureType] = useState("");
+
+  const { data: featureTypes, isLoading: isLoadingFeatureType } = useGetAllFeatureTypes();
 
   return (
     <Form
@@ -43,15 +47,25 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
           }
         }}
       />
-      <Form.Dropdown id="type" title="Toggle Type" placeholder="Toggle Type" defaultValue="boolean">
-        <Form.Dropdown.Item value="boolean" title="Boolean" />
+      <Form.Dropdown
+        id="type"
+        title="Toggle Type"
+        placeholder="Toggle Type"
+        defaultValue={featureTypes?.[0]?.id}
+        isLoading={isLoadingFeatureType}
+        info={featureTypes?.find((type) => type.id === selectedFeatureType)?.description}
+        onChange={(val) => {
+          setSelectedFeatureType(val);
+        }}
+      >
+        {featureTypes?.map((type) => <Form.Dropdown.Item key={type.id} value={type.id} title={type.name} />)}
       </Form.Dropdown>
       <Form.TextArea id="description" title="Description" placeholder="Description" info="Optional" />
       <Form.Checkbox
         id="impressionData"
         label="Impression Data"
         defaultValue={false}
-        info="true if the impression data collection is enabled for the feature, otherwise false."
+        info={`"true" if the impression data collection is enabled for the feature, otherwise "false".`}
       />
     </Form>
   );
