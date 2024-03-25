@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon } from "@raycast/api";
 import { TFeature } from "../types";
 import { useState } from "react";
 import { useGetAllFeatureTypes } from "../hooks/useGetAllFeatureTypes";
@@ -58,7 +58,9 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
           setSelectedFeatureType(val);
         }}
       >
-        {featureTypes?.map((type) => <Form.Dropdown.Item key={type.id} value={type.id} title={type.name} />)}
+        {featureTypes?.map((type) => (
+          <Form.Dropdown.Item key={type.id} value={type.id} title={type.name} icon={Icon.Cd} />
+        ))}
       </Form.Dropdown>
       <Form.TextArea id="description" title="Description" placeholder="Description" info="Optional" />
       <Form.Checkbox
