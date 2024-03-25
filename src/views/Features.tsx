@@ -3,8 +3,10 @@ import { useGetAllFeatures } from "../hooks/useGetAllFeatures";
 import { generateErrorMessage, parseEnvironment } from "../helpers";
 import { TFeatureToggleParams } from "../types";
 import { disableFeature, enableFeature } from "../api";
+import { useCachedState } from "@raycast/utils";
 
-export default function Features({ projectId }: { projectId: string }) {
+export default function Features() {
+  const [projectId] = useCachedState("project-id", "");
   const { isLoading, data, revalidate } = useGetAllFeatures(projectId);
 
   const handleEnableFeature = async (params: TFeatureToggleParams) => {
