@@ -89,7 +89,7 @@ export default function Features() {
                   icon={Icon.PlusCircle}
                   onAction={() => push(<CreateFeature revalidate={revalidate} />)}
                 />
-                <ActionPanel.Section title="Toggle">
+                <ActionPanel.Submenu title="Toggle" icon={Icon.Eye}>
                   {feature.environments.map((env) => {
                     const title = `${env.enabled ? "Disable" : "Enable"} in ${parseEnvironment(env.type)}`;
                     const icon = env.enabled ? Icon.XMarkCircle : Icon.CheckCircle;
@@ -113,7 +113,7 @@ export default function Features() {
 
                     return <Action title={title} icon={icon} key={env.type} onAction={() => handleToggle()} />;
                   })}
-                </ActionPanel.Section>
+                </ActionPanel.Submenu>
               </ActionPanel>
             }
           />

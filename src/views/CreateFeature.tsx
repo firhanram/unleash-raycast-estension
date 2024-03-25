@@ -23,6 +23,7 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
           />
         </ActionPanel>
       }
+      navigationTitle="Create New Feature Toggle"
     >
       <Form.TextField
         id="name"
