@@ -3,6 +3,7 @@ import { useGetAllProjects } from "./hooks/useGetAllProjects";
 import Error from "./components/Error";
 import Features from "./views/Features";
 import { useCachedState } from "@raycast/utils";
+import { TError } from "./types";
 
 export default function Projects() {
   const { data, isLoading, error, revalidate } = useGetAllProjects();
@@ -11,8 +12,10 @@ export default function Projects() {
 
   const { push } = useNavigation();
 
+  const errResponse = error as TError;
+
   if (error) {
-    return <Error errCode={error.message} revalidate={revalidate} />;
+    return <Error errCode={errResponse.code} revalidate={revalidate} />;
   }
 
   return (

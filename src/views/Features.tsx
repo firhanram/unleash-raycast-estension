@@ -6,12 +6,19 @@ import { disableFeature, enableFeature } from "../api";
 import { useCachedState } from "@raycast/utils";
 import CreateFeature from "./CreateFeature";
 import dayjs from "../utils/dayjs";
+import Error from "../components/Error";
 
 export default function Features() {
   const [projectId] = useCachedState("project-id", "");
-  const { isLoading, data, revalidate } = useGetAllFeatures(projectId);
+  const { isLoading, data, revalidate, error } = useGetAllFeatures(projectId);
 
   const { push } = useNavigation();
+
+  const errResponse = error as TError;
+
+  if (error) {
+    return <Error errCode={errResponse.code} revalidate={revalidate} />;
+  }
 
   const handleEnableFeature = async (params: TFeatureToggleParams) => {
     const toast = await showToast({
