@@ -1,7 +1,15 @@
-import { Action, ActionPanel, Form, Icon } from "@raycast/api";
-import { TFeature } from "../types";
+import { Action, ActionPanel, Form, Icon, Toast, showToast } from "@raycast/api";
+import { TError, TFeature } from "../types";
 import { useState } from "react";
 import { useGetAllFeatureTypes } from "../hooks/useGetAllFeatureTypes";
+import { validateFeatureName } from "../api";
+
+type FormValues = {
+  name: string;
+  type: string;
+  description?: string;
+  impressionData: boolean;
+};
 
 export default function CreateFeature({ revalidate }: { revalidate: () => Promise<TFeature[]> }) {
   const [featureName, setFeatureName] = useState("");
@@ -10,15 +18,53 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
 
   const { data: featureTypes, isLoading: isLoadingFeatureType } = useGetAllFeatureTypes();
 
+  const handleValidateFeatureName = async (toast: Toast, name: string) => {
+    try {
+      await validateFeatureName({
+        name,
+      });
+
+      return true;
+    } catch (err) {
+      const errResponse = err as TError;
+      const errMessage = errResponse.details[0].message ?? "Invalid feature name";
+
+      toast.style = Toast.Style.Failure;
+      toast.title = "Failed";
+      toast.message = errMessage;
+
+      return false;
+    }
+  };
+
+  const handleSubmit = async (values: FormValues) => {
+    const toast = await showToast({
+      title: "Creating Feature...",
+      style: Toast.Style.Animated,
+    });
+
+    try {
+      const isValid = await handleValidateFeatureName(toast, values.name);
+
+      if (isValid) {
+        console.log("Feature created", values);
+        await revalidate();
+      }
+    } catch (err) {
+      toast.style = Toast.Style.Failure;
+      toast.title = "Failed";
+      toast.message = "An error occurred while creating the feature";
+    }
+  };
+
   return (
     <Form
       actions={
         <ActionPanel>
           <Action.SubmitForm
             title="Create Feature"
-            onSubmit={async (values) => {
-              console.log(values);
-              revalidate();
+            onSubmit={async (values: FormValues) => {
+              await handleSubmit(values);
             }}
           />
         </ActionPanel>
@@ -28,7 +74,7 @@ export default function CreateFeature({ revalidate }: { revalidate: () => Promis
       <Form.TextField
         id="name"
         title="Name"
-        info="Unique feature name"
+        info="Name must be URL-friendly and unique within the project."
         placeholder="Name"
         value={featureName}
         onChange={(val) => {
