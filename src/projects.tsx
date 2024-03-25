@@ -27,7 +27,6 @@ export default function Projects() {
             source: Icon.Layers,
           }}
           key={project.name}
-          // icon={Icon.Layers}
           subtitle={`${project.featureCount} Toggles`}
           actions={
             <ActionPanel>
