@@ -48,7 +48,7 @@ export default function Features() {
 
       const errResponse = err as TError;
 
-      toast.title = `Failed to enable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+      toast.title = "Failed";
       toast.message = generateErrorMessage(errResponse.code);
     }
   };
@@ -71,7 +71,7 @@ export default function Features() {
 
       const errResponse = err as TError;
 
-      toast.title = `Failed to disable ${params.featureName} in ${parseEnvironment(params.environment)}`;
+      toast.title = "Failed";
       toast.message = generateErrorMessage(errResponse.code);
     }
   };
