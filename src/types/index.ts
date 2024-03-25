@@ -31,6 +31,7 @@ export type TError = {
     message: string;
     description: string;
   }[];
+  code: number;
 };
 
 export type TEnvironment = "development" | "production" | "test" | "preproduction";
@@ -76,3 +77,8 @@ export type TFeatureTypeObj = {
 export type GetAllFeatureTypesResponse = {
   types: TFeatureTypeObj[];
 } & Response;
+
+export type TValidateFeatureNameReq = {
+  name: string;
+  projectId?: string | null;
+};
